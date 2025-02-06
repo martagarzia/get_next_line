@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:40:55 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 14:41:06 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/06 16:06:53 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,25 +104,25 @@ char	*get_next_line(int fd)
 }
 
 // Main function is not included in the project.
-#include <stdio.h>
-#include <fcntl.h>
+// #include <stdio.h>
+// #include <fcntl.h>
 
-int	main(void)
-{
-	char		*line;
-	int			fd;
-	int			i;
+// int	main(void)
+// {
+// 	char		*line;
+// 	int			fd;
+// 	int			i;
 
-	fd = open("gnl.txt", O_RDONLY);
-	if (fd == -1)
-		return (1);
+// 	fd = open("gnl.txt", O_RDONLY);
+// 	if (fd == -1)
+// 		return (1);
 
-	i = 1;
-	while (line)
-	{
-		line = get_next_line(fd);
-		printf("Line %d: %s\n", i++, line);
-		free(line);
-	}
-	return (0);
-}
+// 	i = 1;
+// 	while (line)
+// 	{
+// 		line = get_next_line(fd);
+// 		printf("Line %d: %s\n", i++, line);
+// 		free(line);
+// 	}
+// 	return (0);
+// }

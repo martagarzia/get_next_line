@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:41:52 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 14:42:10 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/06 16:06:40 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,42 +104,42 @@ char	*get_next_line(int fd)
 }
 
 // Main function is not included in the project.
-#include <stdio.h>
-#include <fcntl.h>
+// #include <stdio.h>
+// #include <fcntl.h>
 
-int	main(void)
-{
-	char		*line;
-	int			fd1, fd2, fd3;
-	int			i, j, k;
+// int	main(void)
+// {
+// 	char		*line;
+// 	int			fd1, fd2, fd3;
+// 	int			i, j, k;
 
 
-	fd1 = open("gnlbonus1.txt", O_RDONLY);
-	fd2 = open("gnlbonus2.txt", O_RDONLY);
-	fd3 = open("gnlbonus3.txt", O_RDONLY);
+// 	fd1 = open("gnlbonus1.txt", O_RDONLY);
+// 	fd2 = open("gnlbonus2.txt", O_RDONLY);
+// 	fd3 = open("gnlbonus3.txt", O_RDONLY);
 
-	i = 1;
-	j = 1;
-	k = 1;
-	if (fd1 == -1 || fd2 == -1 || fd3 == -1)
-		return (1);
+// 	i = 1;
+// 	j = 1;
+// 	k = 1;
+// 	if (fd1 == -1 || fd2 == -1 || fd3 == -1)
+// 		return (1);
 
-	while ((line = get_next_line(fd1)) != NULL)
-	{
-		printf("File 1 - Line %d: %s\n", i++, line);
-		free(line);
-	}
-	printf("\n");
-	while ((line = get_next_line(fd2)) != NULL)
-	{
-		printf("File 2 - Line %d: %s\n", j++, line);
-		free(line);
-	}
-	printf("\n");
-	while ((line = get_next_line(fd3)) != NULL)
-	{
-		printf("File 3 - Line %d: %s\n", k++, line);
-		free(line);
-	}
-	return (0);
-}
+// 	while ((line = get_next_line(fd1)) != NULL)
+// 	{
+// 		printf("File 1 - Line %d: %s\n", i++, line);
+// 		free(line);
+// 	}
+// 	printf("\n");
+// 	while ((line = get_next_line(fd2)) != NULL)
+// 	{
+// 		printf("File 2 - Line %d: %s\n", j++, line);
+// 		free(line);
+// 	}
+// 	printf("\n");
+// 	while ((line = get_next_line(fd3)) != NULL)
+// 	{
+// 		printf("File 3 - Line %d: %s\n", k++, line);
+// 		free(line);
+// 	}
+// 	return (0);
+// }

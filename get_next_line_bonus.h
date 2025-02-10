@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:42:32 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 14:42:41 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/10 10:02:28 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 size_t	length(char *str);
 
-int		check_line(char *buffer);
+int		is_line(char *buffer);
 
 char	*get_next_line(int fd);
 char	*read_line(int fd, char *buffer);

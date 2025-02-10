@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:41:52 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 16:06:40 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/10 10:02:28 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*read_line(int fd, char *buffer)
 	if (!buf)
 		return (NULL);
 	rdbyte = 1;
-	while (!check_line(buffer) && rdbyte != 0)
+	while (!is_line(buffer) && rdbyte != 0)
 	{
 		rdbyte = read(fd, buf, BUFFER_SIZE);
 		if (rdbyte == -1)

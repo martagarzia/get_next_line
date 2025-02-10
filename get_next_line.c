@@ -5,64 +5,73 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/06 14:40:55 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 16:06:53 by mgarzia          ###   ########.fr       */
+/*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
+/*   Updated: 2025/02/10 12:11:11 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+	read
+		cosa fa:
+
+		ritorna:
+	
+
+*/
+
 #include "get_next_line.h"
 
-char	*read_line(int fd, char *buffer)
+char	*read_line(int fd, char *buf_cont)
 {
-	char	*buf;
+	char	*temp;
 	int		rdbyte;
 
-	buf = malloc(BUFFER_SIZE + 1);
-	if (!buf)
+	temp = malloc(BUFFER_SIZE + 1);
+	if (temp == NULL)
 		return (NULL);
 	rdbyte = 1;
-	while (!check_line(buffer) && rdbyte != 0)
+	while (is_line(buf_cont) == 0 && rdbyte != 0)
 	{
-		rdbyte = read(fd, buf, BUFFER_SIZE);
+		rdbyte = read(fd, temp, BUFFER_SIZE);
 		if (rdbyte == -1)
 		{
-			free(buffer);
-			free(buf);
+			free(buf_cont);
+			free(temp);
 			return (NULL);
 		}
-		buf[rdbyte] = '\0';
-		buffer = string_join(buffer, buf);
+		temp[rdbyte] = '\0';
+		buf_cont = string_join(buf_cont, temp);
 	}
-	free(buf);
-	return (buffer);
+	free(temp);
+	return (buf_cont);
 }
 
-char	*new_line(char *buffer)
+char	*new_line(char *buf_cont)
 {
 	int		i;
 	char	*line;
 
 	i = 0;
-	if (!buffer[i])
+	if (!buf_cont[i])
 		return (NULL);
-	while (buffer[i] && buffer[i] != '\n')
+	while (buf_cont[i] && buf_cont[i] != '\n')
 		i++;
-	line = malloc(i + (buffer[i] == '\n') + 1);
+	line = malloc(i + (buf_cont[i] == '\n') + 1);
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buf_cont[i] && buf_cont[i] != '\n')
 	{
-		line[i] = buffer[i];
+		line[i] = buf_cont[i];
 		i++;
 	}
-	if (buffer[i] == '\n')
+	if (buf_cont[i] == '\n')
 		line[i++] = '\n';
 	line[i] = '\0';
 	return (line);
 }
 
-char	*new_buffer(char *buffer)
+char	*new_buffer(char *buf_cont)
 {
 	size_t	i;
 	size_t	j;
@@ -70,36 +79,37 @@ char	*new_buffer(char *buffer)
 
 	i = 0;
 	j = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buf_cont[i] && buf_cont[i] != '\n')
 		i++;
-	if (!buffer[i])
+	if (!buf_cont[i])
 	{
-		free(buffer);
+		free(buf_cont);
 		return (NULL);
 	}
-	newbuf = malloc(length(buffer) - i + 1);
+	newbuf = malloc(length(buf_cont) - i + 1);
 	if (!newbuf)
 		return (NULL);
 	i++;
-	while (buffer[i])
-		newbuf[j++] = buffer[i++];
+	while (buf_cont[i])
+		newbuf[j++] = buf_cont[i++];
 	newbuf[j] = '\0';
-	free(buffer);
+	free(buf_cont);
 	return (newbuf);
 }
 
+//cambiato buffer in buf_cont
 char	*get_next_line(int fd)
 {
-	static char	*buffer = NULL;
+	static char	*buf_cont = NULL;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = read_line(fd, buffer);
-	if (buffer == NULL)
+	buf_cont = read_line(fd, buf_cont);
+	if (buf_cont == NULL)
 		return (NULL);
-	line = new_line(buffer);
-	buffer = new_buffer(buffer);
+	line = new_line(buf_cont);
+	buf_cont = new_buffer(buf_cont);
 	return (line);
 }
 

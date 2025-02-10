@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:43:20 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 14:46:48 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/10 10:02:28 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ size_t	length(char *str)
 	return (len);
 }
 
-int	check_line(char *buffer)
+int	is_line(char *buffer)
 {
 	int	i;
 

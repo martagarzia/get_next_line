@@ -5,12 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/06 14:43:02 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/06 14:43:04 by mgarzia          ###   ########.fr       */
+/*   Created: 2025/01/25 18:17:51 by mgarzia           #+#    #+#             */
+/*   Updated: 2025/02/10 12:28:10 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+int	is_line(char *buf_cont)
+{
+	int	i;
+
+	if (buf_cont == NULL)
+		return (0);
+	i = 0;
+	while (buf_cont[i])
+		if (buf_cont[i++] == '\n')
+			return (1);
+	return (0);
+}
 
 size_t	length(char *str)
 {
@@ -20,19 +33,6 @@ size_t	length(char *str)
 	while (str && str[len])
 		len++;
 	return (len);
-}
-
-int	check_line(char *buffer)
-{
-	int	i;
-
-	if (!buffer)
-		return (0);
-	i = 0;
-	while (buffer[i])
-		if (buffer[i++] == '\n')
-			return (1);
-	return (0);
 }
 
 char	*string_join(char *str1, char *str2)

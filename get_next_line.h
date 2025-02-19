@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:18:03 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/10 12:09:35 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/19 15:38:55 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# include <stdlib.h> //NULL
+# include <stdlib.h> //NULL, malloc
 # include <unistd.h>
 
-size_t	length(char *str);
+size_t	ft_strlen(const char *str);
 
 int		is_line(char *buf_cont);
 

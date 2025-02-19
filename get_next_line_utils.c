@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:51 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/10 12:28:10 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/19 15:39:38 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,25 @@ int	is_line(char *buf_cont)
 {
 	int	i;
 
+	i = 0;
 	if (buf_cont == NULL)
 		return (0);
-	i = 0;
-	while (buf_cont[i])
+	while (buf_cont[i] != '\0')
+	{
 		if (buf_cont[i++] == '\n')
 			return (1);
+	}
 	return (0);
 }
 
-size_t	length(char *str)
+size_t	ft_strlen(const char *str)
 {
-	size_t	len;
+	size_t	i;
 
-	len = 0;
-	while (str && str[len])
-		len++;
-	return (len);
+	i = 0;
+	while (str != NULL && str[i] != '\0')
+		i++;
+	return (i);
 }
 
 char	*string_join(char *str1, char *str2)
@@ -43,8 +45,8 @@ char	*string_join(char *str1, char *str2)
 	size_t	i;
 	size_t	j;
 
-	len1 = length(str1);
-	len2 = length(str2);
+	len1 = ft_strlen(str1);
+	len2 = ft_strlen(str2);
 	str = (char *)malloc(len1 + len2 + 1);
 	if (!str)
 		return (NULL);

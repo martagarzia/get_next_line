@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/19 15:39:03 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/02/24 17:31:38 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,12 @@
                 cambia il valore del puntatore originale
 */
 
-
 #include "get_next_line.h"
 
+/* Legge i dati dal file descriptor a blocchi di BUFFER_SIZE 
+e li concatena ai residui 
+fino a trovare un newline (\n) o raggiungere la fine del file. */
+// fd_read_add
 char	*read_line(int fd, char *buf_cont)
 {
 	char	*temp;
@@ -89,21 +92,24 @@ char	*read_line(int fd, char *buf_cont)
 	return (buf_cont);
 }
 
+/* Estrae e restituisce la prima riga completa (fino al \n incluso, se presente) 
+dal buffer dei dati letti. */
+// line_extract
 char	*new_line(char *buf_cont)
 {
-	int		i;
+	size_t	i;
 	char	*line;
 
 	i = 0;
-	if (!buf_cont[i])
+	if (buf_cont[i] == '\0')
 		return (NULL);
-	while (buf_cont[i] && buf_cont[i] != '\n')
+	while (buf_cont[i] != '\0' && buf_cont[i] != '\n')
 		i++;
 	line = malloc(i + (buf_cont[i] == '\n') + 1);
-	if (!line)
+	if (line == NULL)
 		return (NULL);
 	i = 0;
-	while (buf_cont[i] && buf_cont[i] != '\n')
+	while (buf_cont[i] != '\0' && buf_cont[i] != '\n')
 	{
 		line[i] = buf_cont[i];
 		i++;
@@ -114,6 +120,9 @@ char	*new_line(char *buf_cont)
 	return (line);
 }
 
+/* Crea un nuovo buffer contenente solo i dati dopo il primo newline (\n), 
+scartando la riga già restituita. */
+//  buffer_clean_update
 char	*new_buffer(char *buf_cont)
 {
 	size_t	i;
@@ -140,9 +149,11 @@ char	*new_buffer(char *buf_cont)
 	return (newbuf);
 }
 
+/* Gestisce la lettura sequenziale di un file descriptor, 
+restituendo una riga alla volta e aggiornando i residui tra le chiamate. */
 char	*get_next_line(int fd)
 {
-	static char	*buf_cont = NULL;
+	static char	*buf_cont;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -155,25 +166,37 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// #include <stdio.h>
-// #include <fcntl.h>
 
-// int	main(void)
-// {
-// 	char		*line;
-// 	int			fd;
-// 	int			i;
 
-// 	fd = open("gnl.txt", O_RDONLY);
-// 	if (fd == -1)
-// 		return (1);
+//#include <stdio.h>
+//#include <fcntl.h>
+//
+//int	main(int argc, char **argv)
+//{
+//	char		*line;
+//	int			fd;
+//
+//	if (argc == 2)
+//		fd = open(argv[1], O_RDONLY); // apre file passato 2 argomento
+//	else
+//		fd = STDIN_FILENO; // standard input (fd = 0) 
+//
+//	if (fd == -1)
+//	{
+//		perror("Errore nell'apertura del file");
+//		return (1);
+//	}
+//
+//	printf("fd: %d\n", fd);
+//	while ((line = get_next_line(fd)))
+//	{
+//		printf("- %s", line);
+//		free(line);
+//	}
+//	
+//	if (argc == 2)
+//		close(fd);
+//
+//	return (0);
+//}
 
-// 	i = 1;
-// 	while (line)
-// 	{
-// 		line = get_next_line(fd);
-// 		printf("Line %d: %s\n", i++, line);
-// 		free(line);
-// 	}
-// 	return (0);
-// }

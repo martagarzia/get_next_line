@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/02/24 17:31:38 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 10:50:36 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,6 @@
 
 #include "get_next_line.h"
 
-/* Legge i dati dal file descriptor a blocchi di BUFFER_SIZE 
-e li concatena ai residui 
-fino a trovare un newline (\n) o raggiungere la fine del file. */
-// fd_read_add
 char	*read_line(int fd, char *buf_cont)
 {
 	char	*temp;
@@ -92,9 +88,6 @@ char	*read_line(int fd, char *buf_cont)
 	return (buf_cont);
 }
 
-/* Estrae e restituisce la prima riga completa (fino al \n incluso, se presente) 
-dal buffer dei dati letti. */
-// line_extract
 char	*new_line(char *buf_cont)
 {
 	size_t	i;
@@ -120,37 +113,79 @@ char	*new_line(char *buf_cont)
 	return (line);
 }
 
-/* Crea un nuovo buffer contenente solo i dati dopo il primo newline (\n), 
-scartando la riga già restituita. */
-//  buffer_clean_update
-char	*new_buffer(char *buf_cont)
-{
-	size_t	i;
-	size_t	j;
-	char	*newbuf;
+/*
+        calcola len caratteri fino a \n
+        alloca (buffer - len + 1) caratteri
+        copia caratteri dopo \n nella nuova memoria allocata
+        restituisce buffer con solo caratteri dopo \n
+*/
+// void    buffer_delete_newline(char **buf)
+// {
+//     char    *tmp;
+//     size_t  i;
+//     size_t  j;
 
-	i = 0;
-	j = 0;
-	while (buf_cont[i] && buf_cont[i] != '\n')
-		i++;
-	if (!buf_cont[i])
-	{
-		free(buf_cont);
-		return (NULL);
-	}
-	newbuf = malloc(ft_strlen(buf_cont) - i + 1);
-	if (!newbuf)
-		return (NULL);
-	i++;
-	while (buf_cont[i])
-		newbuf[j++] = buf_cont[i++];
-	newbuf[j] = '\0';
-	free(buf_cont);
-	return (newbuf);
+//     tmp = *buf;
+//     if (tmp == NULL)
+//         return;
+//     i = 0;
+//     while (tmp[i] != '\0' && tmp[i] != '\n')
+//         i++;
+//     if (tmp[i] == '\0')
+//     {
+//         free(tmp);
+//         *buf = NULL;
+//         return;
+//     }
+//     *buf = malloc(ft_strlen(tmp) - i);
+//     if (*buf == NULL)
+//         return;
+//     i++;
+//     j = 0;
+//     while (tmp[i] != '\0')
+//         (*buf)[j++] = tmp[i++];
+//     (*buf)[j] = '\0';
+//     free(tmp);
+// }
+
+void    buffer_delete_newline(char **buf)
+{
+    char    *tmp;
+    size_t  len;
+    size_t  j;
+
+    tmp = *buf;
+    if (tmp == NULL)
+        return;
+    len = buffer_find_newline_length(tmp);
+    if (tmp[len] == '\0')
+    {
+        free(tmp);
+        *buf = NULL;
+        return;
+    }
+    *buf = malloc(ft_strlen(tmp) - len);
+    if (*buf == NULL)
+        return;
+    len++;
+    j = 0;
+    while (tmp[len] != '\0')
+        (*buf)[j++] = tmp[len++];
+    (*buf)[j] = '\0';
+    free(tmp);
 }
 
-/* Gestisce la lettura sequenziale di un file descriptor, 
-restituendo una riga alla volta e aggiornando i residui tra le chiamate. */
+size_t  buffer_find_newline_length(const char *buf)
+{
+    size_t  i;
+
+    i = 0;
+    while (buf[i] != '\0' && buf[i] != '\n')
+        i++;
+    return (i);
+}
+
+
 char	*get_next_line(int fd)
 {
 	static char	*buf_cont;
@@ -162,41 +197,38 @@ char	*get_next_line(int fd)
 	if (buf_cont == NULL)
 		return (NULL);
 	line = new_line(buf_cont);
-	buf_cont = new_buffer(buf_cont);
+	buffer_delete_newline(&buf_cont);
 	return (line);
 }
 
+// #include <stdio.h>
+// #include <fcntl.h>
 
+// int	main(int argc, char **argv)
+// {
+// 	char		*line;
+// 	int			fd;
 
-//#include <stdio.h>
-//#include <fcntl.h>
-//
-//int	main(int argc, char **argv)
-//{
-//	char		*line;
-//	int			fd;
-//
-//	if (argc == 2)
-//		fd = open(argv[1], O_RDONLY); // apre file passato 2 argomento
-//	else
-//		fd = STDIN_FILENO; // standard input (fd = 0) 
-//
-//	if (fd == -1)
-//	{
-//		perror("Errore nell'apertura del file");
-//		return (1);
-//	}
-//
-//	printf("fd: %d\n", fd);
-//	while ((line = get_next_line(fd)))
-//	{
-//		printf("- %s", line);
-//		free(line);
-//	}
-//	
-//	if (argc == 2)
-//		close(fd);
-//
-//	return (0);
-//}
+// 	if (argc == 2)
+// 		fd = open(argv[1], O_RDONLY); 
+// 	else
+// 		fd = STDIN_FILENO; 
 
+// 	if (fd == -1)
+// 	{
+// 		perror("Errore nell'apertura del file");
+// 		return (1);
+// 	}
+
+// 	printf("fd: %d\n", fd);
+// 	while ((line = get_next_line(fd)))
+// 	{
+// 		printf("- %s", line);
+// 		free(line);
+// 	}
+	
+// 	if (argc == 2)
+// 		close(fd);
+
+// 	return (0);
+// }

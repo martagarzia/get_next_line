@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:51 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 12:59:35 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 13:54:34 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,6 @@
 */
 
 #include "get_next_line.h"
-
-/* Controlla se nel buffer è presente un carattere newline (\n), 
-indicando che una riga completa può essere estratta. */
-/*
-	se buf_cont è NULL, ritorna 0
-	finchè il carattere attuale di buf_cont non è '\0'
-	se il carattere successivo a quello attuale è '\n', ritorna 1
-	se il caratter attuale è '\0', ritorna 0
-*/
-int	is_line(char *buf_cont)
-{
-	int	i;
-
-	i = 0;
-	if (buf_cont == NULL)
-		return (0);
-	while (buf_cont[i] != '\0')
-	{
-		if (buf_cont[i++] == '\n')
-			return (1);
-	}
-	return (0);
-}
 
 /* 
 	calcola lunghezza di 2 stringhe con ft_strlen_c

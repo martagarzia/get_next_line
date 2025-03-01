@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 13:00:08 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 15:12:53 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,49 +63,61 @@
 
 #include "get_next_line.h"
 
-char	*read_line(int fd, char *buf_cont)
+/* 
+	alloca una stringa di dimensione BUFFER_SIZE + 1
+	finchè la stringa buf == NULL (quindi è vuota), 
+		oppure il carattere attuae di newline_len è diverso da \n
+		oppure il carattere attuale di buf è diverso da \n
+		e i byte letti da read() non sono 0
+	usa read per leggere BUFFER_SIZE bytes da fd e 
+*/
+char	*read_line(int fd, char *buf)
 {
 	char	*temp;
 	int		rdbyte;
+	size_t	newline_len;
 
 	rdbyte = 1;
 	temp = malloc(BUFFER_SIZE + 1);
 	if (temp == NULL)
 		return (NULL);
-	while (is_line(buf_cont) == 0 && rdbyte != 0)
+	while (buf == NULL || ((newline_len = ft_strlen_c(buf, '\n')), (buf[newline_len] != '\n' && rdbyte != 0)))
 	{
 		rdbyte = read(fd, temp, BUFFER_SIZE);
 		if (rdbyte == -1)
 		{
-			free(buf_cont);
+			free(buf);
 			free(temp);
 			return (NULL);
 		}
 		temp[rdbyte] = '\0';
-		buf_cont = string_join(buf_cont, temp);
+		buf = string_join(buf, temp);
 	}
 	free(temp);
-	return (buf_cont);
+	return (buf);
 }
 
-char	*new_line(char *buf_cont)
+/*
+
+*/
+char	*new_line(char *buf)
 {
 	size_t	i;
 	char	*line;
 
-	if (buf_cont == NULL || buf_cont[0] == '\0')
+	if (buf == NULL || buf[0] == '\0')
 		return (NULL);
-	i = ft_strlen_c(buf_cont, '\n');
-	line = malloc(i + (buf_cont[i] == '\n') + 1);
+	i = ft_strlen_c(buf, '\n');
+	line = malloc(i + (buf[i] == '\n') + 1);
 	if (line == NULL)
 		return (NULL);
 	i = 0;
-	while (buf_cont[i] != '\0' && buf_cont[i] != '\n')
+	while (buf[i] != '\0' && buf[i] != '\n')
 	{
-		line[i] = buf_cont[i];
+		line[i] = buf[i];
 		i++;
 	}
-	if (buf_cont[i] == '\n')
+	if (buf[i] == '\n')
 		line[i++] = '\n';
 	line[i] = '\0';
 	return (line);
@@ -143,19 +155,22 @@ void buffer_delete_newline(char **buf)
     (*buf)[j] = '\0';
     free(tmp);
 }
-
+/*
+	se il file descriptor non è valido o il BUFFER_SIZE non è valido, restituisci NULL
+	
+*/
 char	*get_next_line(int fd)
 {
-	static char	*buf_cont;
+	static char	*buf;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buf_cont = read_line(fd, buf_cont);
-	if (buf_cont == NULL)
+	buf = read_line(fd, buf);
+	if (buf == NULL)
 		return (NULL);
-	line = new_line(buf_cont);
-	buffer_delete_newline(&buf_cont);
+	line = new_line(buf);
+	buffer_delete_newline(&buf);
 	return (line);
 }
 

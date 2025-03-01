@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 11:24:23 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 13:00:08 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,9 @@ char	*new_line(char *buf_cont)
 	size_t	i;
 	char	*line;
 
-	i = 0;
-	if (buf_cont[i] == '\0')
+	if (buf_cont == NULL || buf_cont[0] == '\0')
 		return (NULL);
-	while (buf_cont[i] != '\0' && buf_cont[i] != '\n')
-		i++;
+	i = ft_strlen_c(buf_cont, '\n');
 	line = malloc(i + (buf_cont[i] == '\n') + 1);
 	if (line == NULL)
 		return (NULL);
@@ -114,12 +112,11 @@ char	*new_line(char *buf_cont)
 }
 
 /*
-        calcola len caratteri fino a \n
+        calcola len caratteri fino a \n, con ft_strlen_c
         alloca (buffer - len + 1) caratteri
         copia caratteri dopo \n nella nuova memoria allocata
         restituisce buffer con solo caratteri dopo \n
 */
-
 void buffer_delete_newline(char **buf)
 {
     char    *tmp;
@@ -147,19 +144,6 @@ void buffer_delete_newline(char **buf)
     free(tmp);
 }
 
-
-/* calcola size_t caratteri fino a \n*/
-size_t ft_strlen_c(const char *str, char c)
-{
-    size_t i;
-
-    i = 0;
-    while (str[i] != '\0' && str[i] != c)
-        i++;
-    return (i);
-}
-
-
 char	*get_next_line(int fd)
 {
 	static char	*buf_cont;
@@ -174,6 +158,7 @@ char	*get_next_line(int fd)
 	buffer_delete_newline(&buf_cont);
 	return (line);
 }
+
 
 // #include <stdio.h>
 // #include <fcntl.h>

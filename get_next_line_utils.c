@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:51 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 11:24:33 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 12:59:35 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,12 @@
 
 /* Controlla se nel buffer è presente un carattere newline (\n), 
 indicando che una riga completa può essere estratta. */
-// line_complete
+/*
+	se buf_cont è NULL, ritorna 0
+	finchè il carattere attuale di buf_cont non è '\0'
+	se il carattere successivo a quello attuale è '\n', ritorna 1
+	se il caratter attuale è '\0', ritorna 0
+*/
 int	is_line(char *buf_cont)
 {
 	int	i;
@@ -40,9 +45,15 @@ int	is_line(char *buf_cont)
 	return (0);
 }
 
-/* Concatena due stringhe, 
-alloca una nuova stringa con il contenuto combinato 
-e libera la memoria della prima stringa (str1). */
+/* 
+	calcola lunghezza di 2 stringhe con ft_strlen_c
+	alloca una stringa grande quanto la somma delle stringhe
+	copia il contenunto della str1 in str3
+	copia il contenunto della str2 in str3
+	aggiunge il carattere di fine stringa
+	libera la memoria occupata da str1
+	ritrona la nuova str3 che contiene str1 + str2
+*/
 char	*string_join(char *str1, char *str2)
 {
 	char	*str3;
@@ -51,8 +62,8 @@ char	*string_join(char *str1, char *str2)
 	size_t	i;
 	size_t	j;
 	
-	size1 = ft_strlen(str1);
-	size2 = ft_strlen(str2);
+	size1 = ft_strlen_c(str1, '\0');
+	size2 = ft_strlen_c(str2, '\0');
 	i = 0;
 	j = 0;
 	str3 = (char *)malloc(size1 + size2 + 1);
@@ -68,14 +79,19 @@ char	*string_join(char *str1, char *str2)
 	return (str3);
 }
 
-/* Calcola e restituisce la lunghezza di una stringa, 
-restituendo 0 se la stringa è NULL. */
-size_t	ft_strlen(const char *str)
+/*
+	se str è NULL , ritorna 0
+	finchè il carattere attuale di buf non è '\0'
+	se il carattere
+*/
+size_t ft_strlen_c(const char *str, char c)
 {
-	size_t	i;
+    size_t i;
 
-	i = 0;
-	while (str != NULL && str[i] != '\0')
-		i++;
-	return (i);
+	if (str == NULL)
+		return (0);
+    i = 0;
+    while (str[i] != '\0' && str[i] != c)
+        i++;
+    return (i);
 }

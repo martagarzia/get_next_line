@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 10:50:36 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 11:24:23 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,36 +119,8 @@ char	*new_line(char *buf_cont)
         copia caratteri dopo \n nella nuova memoria allocata
         restituisce buffer con solo caratteri dopo \n
 */
-// void    buffer_delete_newline(char **buf)
-// {
-//     char    *tmp;
-//     size_t  i;
-//     size_t  j;
 
-//     tmp = *buf;
-//     if (tmp == NULL)
-//         return;
-//     i = 0;
-//     while (tmp[i] != '\0' && tmp[i] != '\n')
-//         i++;
-//     if (tmp[i] == '\0')
-//     {
-//         free(tmp);
-//         *buf = NULL;
-//         return;
-//     }
-//     *buf = malloc(ft_strlen(tmp) - i);
-//     if (*buf == NULL)
-//         return;
-//     i++;
-//     j = 0;
-//     while (tmp[i] != '\0')
-//         (*buf)[j++] = tmp[i++];
-//     (*buf)[j] = '\0';
-//     free(tmp);
-// }
-
-void    buffer_delete_newline(char **buf)
+void buffer_delete_newline(char **buf)
 {
     char    *tmp;
     size_t  len;
@@ -157,14 +129,14 @@ void    buffer_delete_newline(char **buf)
     tmp = *buf;
     if (tmp == NULL)
         return;
-    len = buffer_find_newline_length(tmp);
+    len = ft_strlen_c(tmp, '\n');
     if (tmp[len] == '\0')
     {
         free(tmp);
         *buf = NULL;
         return;
     }
-    *buf = malloc(ft_strlen(tmp) - len);
+    *buf = malloc(ft_strlen_c(tmp, '\0') - len);
     if (*buf == NULL)
         return;
     len++;
@@ -175,12 +147,14 @@ void    buffer_delete_newline(char **buf)
     free(tmp);
 }
 
-size_t  buffer_find_newline_length(const char *buf)
+
+/* calcola size_t caratteri fino a \n*/
+size_t ft_strlen_c(const char *str, char c)
 {
-    size_t  i;
+    size_t i;
 
     i = 0;
-    while (buf[i] != '\0' && buf[i] != '\n')
+    while (str[i] != '\0' && str[i] != c)
         i++;
     return (i);
 }

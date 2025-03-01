@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:18:03 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 10:50:27 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/01 11:24:28 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 char	*read_line(int fd, char *buf_cont);
 char	*new_line(char *buf_cont);
 void    buffer_delete_newline(char **buf);
-size_t  buffer_find_newline_length(const char *buf);
+size_t ft_strlen_c(const char *str, char c);
 char	*get_next_line(int fd);
 
 int		is_line(char *buf_cont);

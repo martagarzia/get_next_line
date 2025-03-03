@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/01 15:12:53 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/04 00:46:49 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,25 +63,21 @@
 
 #include "get_next_line.h"
 
-/* 
-	alloca una stringa di dimensione BUFFER_SIZE + 1
-	finchè la stringa buf == NULL (quindi è vuota), 
-		oppure il carattere attuae di newline_len è diverso da \n
-		oppure il carattere attuale di buf è diverso da \n
-		e i byte letti da read() non sono 0
-	usa read per leggere BUFFER_SIZE bytes da fd e 
+
+/*
+	alloca una stringa "temp" grande quanto BUFFER_SIZE + 1 (per \0)
+	finchè il carattere attuale di "buf" non è \n
 */
 char	*read_line(int fd, char *buf)
 {
 	char	*temp;
 	int		rdbyte;
-	size_t	newline_len;
 
 	rdbyte = 1;
 	temp = malloc(BUFFER_SIZE + 1);
 	if (temp == NULL)
 		return (NULL);
-	while (buf == NULL || ((newline_len = ft_strlen_c(buf, '\n')), (buf[newline_len] != '\n' && rdbyte != 0)))
+	while (is_line(buf) == 0 && rdbyte != 0)
 	{
 		rdbyte = read(fd, temp, BUFFER_SIZE);
 		if (rdbyte == -1)
@@ -97,9 +93,6 @@ char	*read_line(int fd, char *buf)
 	return (buf);
 }
 
-/*
-
-*/
 char	*new_line(char *buf)
 {
 	size_t	i;
@@ -129,7 +122,7 @@ char	*new_line(char *buf)
         copia caratteri dopo \n nella nuova memoria allocata
         restituisce buffer con solo caratteri dopo \n
 */
-void buffer_delete_newline(char **buf)
+void delete_newline_from_buffer(char **buf)
 {
     char    *tmp;
     size_t  len;
@@ -156,8 +149,7 @@ void buffer_delete_newline(char **buf)
     free(tmp);
 }
 /*
-	se il file descriptor non è valido o il BUFFER_SIZE non è valido, restituisci NULL
-	
+leggi
 */
 char	*get_next_line(int fd)
 {
@@ -166,15 +158,32 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	/*_1____________________________*/
 	buf = read_line(fd, buf);
 	if (buf == NULL)
 		return (NULL);
+	/*_2____________________________*/
 	line = new_line(buf);
-	buffer_delete_newline(&buf);
+	/*_3____________________________*/
+	delete_newline_from_buffer(&buf);
 	return (line);
 }
+/* -gdwarf-4 */
 
-
+/*
+	se il numero di argomenti è 2 (file)
+		fd è uguare al ritorno di open()
+	se il numero di argomenti è 1 (standard input)
+		fd è 0 (terminale)
+	se fd -1 vuol dire che c'è stato errore
+		interrompe funzione e ritorna 1
+	finchè il return di get_next_line() non è NULL
+		stampa la stringa (line)
+		libera memoria occupata da "line" dopo che l'hai usata
+	se gli argomenti erano 2, quindi ha aperto un file, chiudi quel fd
+	restituisci 0, per indicare che il programma è andato a buon fine
+	
+*/
 // #include <stdio.h>
 // #include <fcntl.h>
 
@@ -183,19 +192,22 @@ char	*get_next_line(int fd)
 // 	char		*line;
 // 	int			fd;
 
+// 	/*_apri fd__________________________________________*/
 // 	if (argc == 2)
 // 		fd = open(argv[1], O_RDONLY); 
 // 	else
 // 		fd = STDIN_FILENO; 
 
+// 	/*_fail__________________________________________*/
 // 	if (fd == -1)
 // 	{
 // 		perror("Errore nell'apertura del file");
 // 		return (1);
 // 	}
 
+// 	/*_success__________________________________________*/
 // 	printf("fd: %d\n", fd);
-// 	while ((line = get_next_line(fd)))
+// 	while ((line = get_next_line(fd)) != NULL)
 // 	{
 // 		printf("- %s", line);
 // 		free(line);

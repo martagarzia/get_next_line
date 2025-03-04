@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mgarzia <mgarzia@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/04 03:56:32 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/04 04:30:13 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@
 		
 */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /*
 	alloca una stringa "temp" grande quanto BUFFER_SIZE + 1 (per \0)
@@ -222,35 +222,34 @@ char	*get_next_line(int fd)
 */
 // #include <stdio.h>
 // #include <fcntl.h>
+// #include <stdlib.h>
 
-// int	main(int argc, char **argv)
+// int main(void)
 // {
-// 	char		*line;
-// 	int			fd;
+//     int fd1, fd2;
+//     char *line;
 
-// 	/*_apri fd__________________________________________*/
-// 	if (argc == 2)
-// 		fd = open(argv[1], O_RDONLY); 
-// 	else
-// 		fd = STDIN_FILENO; 
+//     fd1 = open("test.txt", O_RDONLY);
+//     fd2 = open("test_lungo.txt", O_RDONLY);
 
-// 	/*_fail__________________________________________*/
-// 	if (fd == -1)
-// 	{
-// 		perror("Errore nell'apertura del file");
-// 		return (1);
-// 	}
+//     if (fd1 < 0 || fd2 < 0)
+//     {
+//         perror("Errore apertura file");
+//         return (1);
+//     }
 
-// 	/*_success__________________________________________*/
-// 	printf("fd: %d\n", fd);
-// 	while ((line = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("- %s", line);
-// 		free(line);
-// 	}
+//     printf("=== LETTURA MULTIPLA ===\n");
+//     while ((line = get_next_line(fd1)) || (line = get_next_line(fd2)))
+//     {
+//         if (line)
+//         {
+//             printf("%s", line);
+//             free(line);
+//         }
+//     }
 
-// 	if (argc == 2)
-// 		close(fd);
+//     close(fd1);
+//     close(fd2);
 
-// 	return (0);
+//     return (0);
 // }

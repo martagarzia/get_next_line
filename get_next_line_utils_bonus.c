@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mgarzia <mgarzia@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:51 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/04 03:42:19 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/04 04:20:21 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 						se allocazione fallisce
 */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /* Controlla se nel buffer è presente un carattere newline (\n), 
 indicando che una riga completa può essere estratta. */

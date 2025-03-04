@@ -6,7 +6,7 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:51 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/04 00:47:42 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/04 03:42:19 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ indicando che una riga completa può essere estratta. */
 	se il carattere successivo a quello attuale è '\n', ritorna 1
 	se il caratter attuale è '\0', ritorna 0
 */
-int	is_line(char *buf_cont)
+int	there_is_newline(char *buf_cont)
 {
 	int	i;
 
@@ -61,12 +61,11 @@ char	*string_join(char *str1, char *str2)
 	size_t	size2;
 	size_t	i;
 	size_t	j;
-	
+
 	size1 = ft_strlen_c(str1, '\0');
 	size2 = ft_strlen_c(str2, '\0');
 	i = 0;
 	j = 0;
-	// str3 = (char *)malloc(size1 + size2 + 1);
 	str3 = malloc(size1 + size2 + 1);
 	if (str3 == NULL)
 		return (NULL);
@@ -85,14 +84,14 @@ char	*string_join(char *str1, char *str2)
 	finchè il carattere attuale di buf non è '\0'
 	se il carattere
 */
-size_t ft_strlen_c(const char *str, char c)
+size_t	ft_strlen_c(const char *str, char c)
 {
-    size_t i;
+	size_t	i;
 
 	i = 0;
 	if (str == NULL)
 		return (0);
-    while (str[i] != '\0' && str[i] != c)
-        i++;
-    return (i);
+	while (str[i] != '\0' && str[i] != c)
+		i++;
+	return (i);
 }

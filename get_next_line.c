@@ -6,63 +6,98 @@
 /*   By: mgarzia <mgarzia@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 18:17:59 by mgarzia           #+#    #+#             */
-/*   Updated: 2025/03/04 00:46:49 by mgarzia          ###   ########.fr       */
+/*   Updated: 2025/03/04 03:49:50 by mgarzia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-        get_next_line -------------------------------------------------------------
-                cosa fa:        legge una riga alla volta (terminata da \n o EOF) 
-                                        da un file descriptor.
-                ritorna:        puntatore a una stringa allocata dinamicamente
-                                          -     se viene letta una riga completa
-                                        NULL
-                                          -     se raggiunge EOF senza dati residui
-                                          -     se c'è un errore o il file descriptor è invalido
-                                        ND
-                                          -     se il file puntato dal file descriptor (fd) 
-                                                cambia durante l'esecuzione
-                                          -     se la funzione read 
-                                                non ha ancora raggiunto la fine del file (EOF)
-                                          -     se legge un file binario 
-                                                (immagini, eseguibili, dati binari)
-        read ----------------------------------------------------------------------
-                prototipo:      ssize_t read(int fd, void *buf, size_t count);
-                cosa fa:        legge dati
-                                        da un file o 
-                                        da un dispositivo identificato da un file descriptor (fd)
-                                        e li memorizza in un buffer (buf) fornito dall'utente, 
-                                        fino a un massimo di count byte.
-                ritorna:        numero di byte letti
-                                                se ha successo. 
-                                                = count:        lettura completa dei byte richiesti.
-                                                < count:        fine del file raggiunta o 
-                                                                        meno dati disponibili.
-                                        0
-                                                se raggiunge EOF senza leggere nulla.
-                                        -1
-                                                se fallisce.
-                                                e imposta errno per indicare il tipo di errore
-                                                (es. EBADF, EFAULT, ecc.).
-        malloc --------------------------------------------------------------------
-                prototipo:      void *malloc( size_t size );
-                cosa fa:        alloca dinamicamente un blocco di memoria 
-                                        di dimensione specificata in byte 
-                                        nello heap
-                ritorna:        puntatore (void *) al primo byte del blocco allocato
-                                                se alloca
-                                        NULL
-                                                se non alloca
-        ___________________________________________________________________________
-        
-        puntatore (char *residual)
-                cambia il valore di `residual` nella funzione attuale
-        puntatore a puntatore (char **residual) 
-                cambia il valore del puntatore originale
+ 	get_next_line()
+		char *get_next_line(int fd);
+		
+		return (ptr);
+		ptr = se restituisce riga
+		NULL = EOF, errore (fd invalid)
+		
+		1. apre fd
+		2. legge file e memoriazza dati in un buffer
+		3. controlla se in buffer c'è \n
+		4. se non c'è \n legge nuovo blocco di file e concatena con vecchio 
+			blocco
+		4. se trova \n rialloca stringa fino \n in una nuova stringa
+		5. cancella stringa estratta dal buffer
+		ma conserva tutto dopo \n
+		6. restituisce stringa estratta. Altrimenti NULL se EOF o errore
+		7. libera risorse
+
+		2. alloca e concatena stringa vecchia e nuova
+		3. restituisce ptr a stringa completa
+
+
+	open()
+		int open(const char *pathname, int flags, ...);
+		
+		int fd = file aperto
+		-1 = errore
+
+		1. apre file e gestisce flag
+		2. restituisce fd come int
+
+		fcntl.h
+
+	read()
+		ssize_t read(int fd, void *buf, size_t count);	
+		
+		ssize_t byte letti
+		0 = EOF
+		-1 = errore (fd non valido, errore di sistema)
+
+		1. apre fd
+		2. legge stringa dati
+		3. restituisce ssize_t byte letti
+
+		unistd.h
+	
+	printf()
+		int printf(const char *format, ...);
+		
+		int caratteri stampati = se stampa
+		-1 = errore
+
+		1. analizza formato e format specifier
+		2. sostituisce format specifier
+		3. stampa risultato su stdout 
+
+		stdio.h
+	
+	malloc()
+		void *malloc( size_t size );
+		
+		void *ptr a stringa = se alloca
+		NULL = se non alloca
+		
+		1. richiede memoria al sistema operativo
+		2. restituisce puntatore alla memoria allocata
+
+		stdlib.h
+	
+	argc argv
+		int argc =  numero argomenti
+		char *argv[] = array di stringhe (i parametri) (char**)
+	
+	free()
+		void free(void *ptr);
+		
+		1. libera della memoria precedentemente allocata.
+
+		stdlib.h
+		
+		controlla memoria non liberata (memory leak):
+		valgrind --leak-check=full ./gnl
+
+		
 */
 
 #include "get_next_line.h"
-
 
 /*
 	alloca una stringa "temp" grande quanto BUFFER_SIZE + 1 (per \0)
@@ -77,7 +112,7 @@ char	*read_line(int fd, char *buf)
 	temp = malloc(BUFFER_SIZE + 1);
 	if (temp == NULL)
 		return (NULL);
-	while (is_line(buf) == 0 && rdbyte != 0)
+	while (there_is_newline(buf) == 0 && rdbyte != 0)
 	{
 		rdbyte = read(fd, temp, BUFFER_SIZE);
 		if (rdbyte == -1)
@@ -93,6 +128,10 @@ char	*read_line(int fd, char *buf)
 	return (buf);
 }
 
+/*
+	(buf[i] == '\n') aggiunge 1 se il carattere attuale è \n.
+	può non essere newline se siamo a EOF
+*/
 char	*new_line(char *buf)
 {
 	size_t	i;
@@ -117,39 +156,40 @@ char	*new_line(char *buf)
 }
 
 /*
-        calcola len caratteri fino a \n, con ft_strlen_c
-        alloca (buffer - len + 1) caratteri
-        copia caratteri dopo \n nella nuova memoria allocata
-        restituisce buffer con solo caratteri dopo \n
+		calcola len caratteri fino a \n, con ft_strlen_c
+		alloca (buffer - len + 1) caratteri
+		copia caratteri dopo \n nella nuova memoria allocata
+		restituisce buffer con solo caratteri dopo \n
 */
-void delete_newline_from_buffer(char **buf)
+void	delete_newline_from_buffer(char **buf)
 {
-    char    *tmp;
-    size_t  len;
-    size_t  j;
+	char	*tmp;
+	size_t	len;
+	size_t	j;
 
-    tmp = *buf;
-    if (tmp == NULL)
-        return;
-    len = ft_strlen_c(tmp, '\n');
-    if (tmp[len] == '\0')
-    {
-        free(tmp);
-        *buf = NULL;
-        return;
-    }
-    *buf = malloc(ft_strlen_c(tmp, '\0') - len);
-    if (*buf == NULL)
-        return;
-    len++;
-    j = 0;
-    while (tmp[len] != '\0')
-        (*buf)[j++] = tmp[len++];
-    (*buf)[j] = '\0';
-    free(tmp);
+	tmp = *buf;
+	if (tmp == NULL)
+		return ;
+	len = ft_strlen_c(tmp, '\n');
+	if (tmp[len] == '\0')
+	{
+		free(tmp);
+		*buf = NULL;
+		return ;
+	}
+	*buf = malloc(ft_strlen_c(tmp, '\0') - len);
+	if (*buf == NULL)
+		return ;
+	len++;
+	j = 0;
+	while (tmp[len] != '\0')
+		(*buf)[j++] = tmp[len++];
+	(*buf)[j] = '\0';
+	free(tmp);
 }
+
 /*
-leggi
+	leggi e stampa
 */
 char	*get_next_line(int fd)
 {
@@ -158,17 +198,13 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	/*_1____________________________*/
 	buf = read_line(fd, buf);
 	if (buf == NULL)
 		return (NULL);
-	/*_2____________________________*/
 	line = new_line(buf);
-	/*_3____________________________*/
 	delete_newline_from_buffer(&buf);
 	return (line);
 }
-/* -gdwarf-4 */
 
 /*
 	se il numero di argomenti è 2 (file)
@@ -212,7 +248,7 @@ char	*get_next_line(int fd)
 // 		printf("- %s", line);
 // 		free(line);
 // 	}
-	
+
 // 	if (argc == 2)
 // 		close(fd);
 
